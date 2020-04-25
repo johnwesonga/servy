@@ -34,23 +34,23 @@ defmodule Servy.Handler do
     %{method: method, path: path, resp_body: "", status: nil}
   end
 
-  def route(conv) do
-    route(conv, conv.method, conv.path)
-  end
+  # def route(conv) do
+  #  route(conv, conv.method, conv.path)
+  # end
 
-  def route(conv, "GET", "/wildthings") do
+  def route(%{method: "GET", path: "/wildthings"} = conv) do
     %{conv | status: 200, resp_body: "Bears, Tigers, Lions"}
   end
 
-  def route(conv, "GET", "/bears") do
+  def route(%{method: "GET", path: "/bears"} = conv) do
     %{conv | status: 200, resp_body: "Teddy, Smokey, Paddington"}
   end
 
-  def route(conv, "GET", "/bears" <> id) do
+  def route(%{method: "GET", path: "/bears" <> id} = conv) do
     %{conv | status: 200, resp_body: "Bear #{id}"}
   end
 
-  def route(conv, _method, path) do
+  def route(%{path: path} = conv) do
     %{conv | status: 404, resp_body: "No #{path} found here!"}
   end
 
@@ -73,7 +73,7 @@ defmodule Servy.Handler do
 end
 
 request = """
-GET /wildlife HTTP/1.1
+GET /wildthings HTTP/1.1
 Host: example.com
 User-Agent: ExampleBrowser/1.0
 Accept: */*
@@ -84,7 +84,7 @@ response = Servy.Handler.handle(request)
 IO.puts(response)
 
 request = """
-GET /wildthings HTTP/1.1
+GET /wildlife HTTP/1.1
 Host: example.com
 User-Agent: ExampleBrowser/1.0
 Accept: */*
